@@ -1,4 +1,4 @@
--- Docentes (CREATE)
+-- Llama al procedimiento de crear un docente con los valores proporcionados
 CALL sp_docente_crear (
     'CC1001',
     'Ana Gómez',
@@ -17,7 +17,7 @@ CALL sp_docente_crear (
     'Cátedra'
 );
 
--- Obtener IDs
+-- Hace un set para obtener el ID de un docente mediante un select y guardarlo en una variable
 SET
     @id_ana := (
         SELECT docente_id
@@ -34,7 +34,7 @@ SET
             numero_documento = 'CC1002'
     );
 
--- Proyectos (CREATE)
+-- Llama al procedimiento de crear un proyecto con los valores proporcionados
 CALL sp_proyecto_crear (
     'Plataforma Académica',
     'Módulos de matrícula',
@@ -55,7 +55,7 @@ CALL sp_proyecto_crear (
     @id_carlos
 );
 
--- UPDATE para disparar trigger de ACTUALIZADOS
+-- Llama al procedimiento de actualizar un docente con los valores proporcionados
 CALL sp_docente_actualizar (
     @id_carlos,
     'CC1002',
@@ -66,7 +66,8 @@ CALL sp_docente_actualizar (
     'Cátedra'
 );
 
--- Eliminar la docente Ana: primero sus proyectos (por FK), luego docente (dispara DELETE)
+-- Elimina los proyectos de la docente Ana mediante el ID de la docente guardado en la variable
 DELETE FROM proyecto WHERE docente_id_jefe = @id_ana;
 
+-- Llama al procedimiento de eliminar un docente con el ID de la docente guardado en la variable
 CALL sp_docente_eliminar (@id_ana);
