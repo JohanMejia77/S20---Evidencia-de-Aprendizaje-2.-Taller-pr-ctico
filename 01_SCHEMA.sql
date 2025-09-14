@@ -11,7 +11,7 @@ DROP TABLE IF EXISTS proyecto;
 
 DROP TABLE IF EXISTS docente;
 
--- Tablas base
+-- Se crean las tablas de las entidades Docente y Proyecto 
 CREATE TABLE docente (
     docente_id INT AUTO_INCREMENT PRIMARY KEY,
     numero_documento VARCHAR(20) NOT NULL,
@@ -42,7 +42,7 @@ CREATE TABLE proyecto (
     CONSTRAINT fk_proyecto_docente FOREIGN KEY (docente_id_jefe) REFERENCES docente (docente_id) ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE = InnoDB;
 
--- Auditoría
+-- Se crea la tabla de copia de seguridad para docentes 
 CREATE TABLE copia_actualizados_docente (
     auditoria_id INT AUTO_INCREMENT PRIMARY KEY,
     docente_id INT NOT NULL,
@@ -55,6 +55,8 @@ CREATE TABLE copia_actualizados_docente (
     accion_fecha DATETIME NOT NULL DEFAULT(UTC_TIMESTAMP()),
     usuario_sql VARCHAR(128) NOT NULL DEFAULT(CURRENT_USER())
 ) ENGINE = InnoDB;
+
+--Se crea la tabla de copia de seguridad de los docentes eliminados 
 
 CREATE TABLE copia_eliminados_docente (
     auditoria_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -69,7 +71,7 @@ CREATE TABLE copia_eliminados_docente (
     usuario_sql VARCHAR(128) NOT NULL DEFAULT(CURRENT_USER())
 ) ENGINE = InnoDB;
 
--- Procedimientos DOCENTE
+-- Se borran los procedimientos de docentes si existen
 DROP PROCEDURE IF EXISTS sp_docente_crear;
 
 DROP PROCEDURE IF EXISTS sp_docente_leer;
@@ -79,6 +81,9 @@ DROP PROCEDURE IF EXISTS sp_docente_actualizar;
 DROP PROCEDURE IF EXISTS sp_docente_eliminar;
 
 DELIMITER $$
+
+--Se crea el procedimiento de crear un docente
+
 
 CREATE PROCEDURE sp_docente_crear(
   IN p_numero_documento VARCHAR(20),
@@ -94,10 +99,13 @@ BEGIN
   SELECT LAST_INSERT_ID() AS docente_id_creado;
 END$$
 
+--Se crea el procedimiento de leer un docente el cual se selecciona mediante su ID 
 CREATE PROCEDURE sp_docente_leer(IN p_docente_id INT)
 BEGIN
   SELECT * FROM docente WHERE docente_id = p_docente_id;
 END$$
+
+--Se crea el procedimiento de Actualizar el cual recibe los valores nuevos y el id del docente
 
 CREATE PROCEDURE sp_docente_actualizar(
   IN p_docente_id       INT,
@@ -119,6 +127,8 @@ BEGIN
    WHERE docente_id = p_docente_id;
   SELECT * FROM docente WHERE docente_id = p_docente_id;
 END$$
+
+--Se crea el procedimiento de eliminar recibiendo el ID 
 
 CREATE PROCEDURE sp_docente_eliminar(IN p_docente_id INT)
 BEGIN
