@@ -1,4 +1,4 @@
--- Limpieza
+--Borra los triggers si estos existen 
 DROP TRIGGER IF EXISTS tr_docente_after_update;
 
 DROP TRIGGER IF EXISTS tr_docente_after_delete;
