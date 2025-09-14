@@ -2,7 +2,7 @@
 DROP TRIGGER IF EXISTS tr_docente_after_update;
 
 DROP TRIGGER IF EXISTS tr_docente_after_delete;
-
+-- Borra las tablas si estas existen
 DROP TABLE IF EXISTS copia_eliminados_docente;
 
 DROP TABLE IF EXISTS copia_actualizados_docente;
