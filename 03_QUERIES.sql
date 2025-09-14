@@ -76,6 +76,7 @@ CALL sp_docente_crear (
     'Cátedra'
 );
 
+-- Hace un set para obtener el ID de un docente mediante un select y guardarlo en una variable
 SET
     @id_ana := (
         SELECT docente_id
@@ -92,6 +93,7 @@ SET
             numero_documento = 'CC1002'
     );
 
+-- Llama al procedimiento de crear un proyecto con los valores proporcionados
 CALL sp_proyecto_crear (
     'Plataforma Académica',
     'Módulos de matrícula',
@@ -112,7 +114,7 @@ CALL sp_proyecto_crear (
     @id_carlos
 );
 
--- Q9: Inserciones directas (opcional)
+-- Q9: Inserta un docente y un proyecto directamente
 INSERT INTO
     docente (
         numero_documento,
