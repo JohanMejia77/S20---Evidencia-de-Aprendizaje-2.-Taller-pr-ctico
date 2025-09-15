@@ -135,7 +135,8 @@ BEGIN
   DELETE FROM docente WHERE docente_id = p_docente_id;
 END$$
 
--- Procedimientos PROYECTO
+-- Se borran los procedimientos de Proyectos si existen
+
 DROP PROCEDURE IF EXISTS sp_proyecto_crear;
 
 DROP PROCEDURE IF EXISTS sp_proyecto_leer;
@@ -143,6 +144,8 @@ DROP PROCEDURE IF EXISTS sp_proyecto_leer;
 DROP PROCEDURE IF EXISTS sp_proyecto_actualizar;
 
 DROP PROCEDURE IF EXISTS sp_proyecto_eliminar;
+
+-- Se crea el procedimiento de crear un proyecto
 
 CREATE PROCEDURE sp_proyecto_crear(
   IN p_nombre           VARCHAR(120),
@@ -152,12 +155,16 @@ CREATE PROCEDURE sp_proyecto_crear(
   IN p_presupuesto      DECIMAL(12,2),
   IN p_horas            INT,
   IN p_docente_id_jefe  INT
+
+--p_docente_id_jefe debe existir en la tabla docente
+
 )
 BEGIN
   INSERT INTO proyecto (nombre, descripcion, fecha_inicial, fecha_final, presupuesto, horas, docente_id_jefe)
   VALUES (p_nombre, p_descripcion, p_fecha_inicial, p_fecha_final, IFNULL(p_presupuesto,0), IFNULL(p_horas,0), p_docente_id_jefe);
   SELECT LAST_INSERT_ID() AS proyecto_id_creado;
 END$$
+-- Se crea el procedimiento de leer un proyecto se selecciona mediante su ID
 
 CREATE PROCEDURE sp_proyecto_leer(IN p_proyecto_id INT)
 BEGIN
@@ -166,6 +173,7 @@ BEGIN
   JOIN docente d ON d.docente_id = p.docente_id_jefe
   WHERE p.proyecto_id = p_proyecto_id;
 END$$
+-- Se crea el procedimiento de actualizar un proyecto recibiendo los nuevos valores y el ID del proyecto
 
 CREATE PROCEDURE sp_proyecto_actualizar(
   IN p_proyecto_id      INT,
@@ -176,6 +184,8 @@ CREATE PROCEDURE sp_proyecto_actualizar(
   IN p_presupuesto      DECIMAL(12,2),
   IN p_horas            INT,
   IN p_docente_id_jefe  INT
+
+--p_docente_id_jefe debe existir en la tabla docente
 )
 BEGIN
   UPDATE proyecto
@@ -190,12 +200,15 @@ BEGIN
   CALL sp_proyecto_leer(p_proyecto_id);
 END$$
 
+-- Se crea el procedimiento de eliminar un proyecto recibiendo su ID
+
 CREATE PROCEDURE sp_proyecto_eliminar(IN p_proyecto_id INT)
 BEGIN
   DELETE FROM proyecto WHERE proyecto_id = p_proyecto_id;
 END$$
 
--- UDF
+-- Se borra la función si existe
+
 DROP FUNCTION IF EXISTS fn_promedio_presupuesto_por_docente;
 
 CREATE FUNCTION fn_promedio_presupuesto_por_docente(p_docente_id INT)
@@ -210,7 +223,8 @@ BEGIN
   RETURN IFNULL(v_prom,0);
 END$$
 
--- Triggers
+-- Triggers para auditoría de actualizaciones y eliminaciones en la tabla docente
+
 CREATE TRIGGER tr_docente_after_update
 AFTER UPDATE ON docente
 FOR EACH ROW
@@ -220,6 +234,8 @@ BEGIN
   VALUES
     (NEW.docente_id, NEW.numero_documento, NEW.nombres, NEW.titulo, NEW.anios_experiencia, NEW.direccion, NEW.tipo_docente);
 END$$
+
+-- Trigger para auditoría de eliminaciones en la tabla docente
 
 CREATE TRIGGER tr_docente_after_delete
 AFTER DELETE ON docente
@@ -233,7 +249,8 @@ END$$
 
 DELIMITER;
 
--- Índices
+-- Se crean los índices para optimizar las consultas
+
 CREATE INDEX ix_proyecto_docente ON proyecto (docente_id_jefe);
 
 CREATE INDEX ix_docente_documento ON docente (numero_documento);
