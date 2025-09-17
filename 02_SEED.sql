@@ -1,4 +1,4 @@
--- Cada bloque de call esta creando un docente nuevo en la base de datos con los datos que se le proporcionan 
+-- Cada bloque de call esta creando o insertando la informacion de un docente nuevo en la tabla Docente de la base de datos, con los datos que se le proporcionan 
 CALL sp_docente_crear (
     'CC1001',
     'Ana Gómez',
@@ -17,7 +17,7 @@ CALL sp_docente_crear (
     'Cátedra'
 );
 
--- Hace un set para obtener el ID de un docente mediante un select y guardarlo en una variable
+-- El set es como pedirle a la base de datos que busque y que me de el ID interno del docente mediante un select y guardarlo en una cajita o variable
 SET
     @id_ana := (
         SELECT docente_id
@@ -34,7 +34,7 @@ SET
             numero_documento = 'CC1002'
     );
 
--- Llama al procedimiento de crear un proyecto con los valores proporcionados
+--Cada bloque de call esta creando un proyecto nuevo en la base de datos, Se pasan como parámetros el nombre, la descripción, las fechas de inicio y fin, el presupuesto, el número de horas, y el ID del docente responsable
 CALL sp_proyecto_crear (
     'Plataforma Académica',
     'Módulos de matrícula',
@@ -55,7 +55,7 @@ CALL sp_proyecto_crear (
     @id_carlos
 );
 
--- Llama al procedimiento de actualizar un docente con los valores proporcionados
+-- Llama al procedimiento sp_docente_actualizar para modificar los datos de un docente existente en la base de datos, usando el ID guardado en @id_carlos y reemplazando la información anterior con los nuevos valores
 CALL sp_docente_actualizar (
     @id_carlos,
     'CC1002',
@@ -66,8 +66,8 @@ CALL sp_docente_actualizar (
     'Cátedra'
 );
 
--- Elimina los proyectos de la docente Ana mediante el ID de la docente guardado en la variable
+-- Elimina todos los registros de la tabla proyecto que estén asociados a la docente Ana, utilizando el valor de su ID que está almacenado en la variable @id_ana.
 DELETE FROM proyecto WHERE docente_id_jefe = @id_ana;
 
--- Llama al procedimiento de eliminar un docente con el ID de la docente guardado en la variable
+-- Ejecuta el procedimiento sp_docente_eliminar para borrar definitivamente a la docente Ana de la base de datos, identificándola mediante el ID guardado en la variable @id_ana.
 CALL sp_docente_eliminar (@id_ana);
