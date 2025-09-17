@@ -1,4 +1,4 @@
--- Llama al procedimiento de crear un docente con los valores proporcionados
+-- Cada bloque de call esta creando un docente nuevo en la base de datos con los datos que se le proporcionan 
 CALL sp_docente_crear (
     'CC1001',
     'Ana Gómez',
