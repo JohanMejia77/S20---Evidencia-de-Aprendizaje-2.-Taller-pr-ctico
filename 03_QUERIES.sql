@@ -57,7 +57,7 @@ GROUP BY
     d.docente_id,
     d.nombres;
 
--- Q8: Llama al procedimiento de crear un docente con los valores proporcionados
+-- Q8: Se está llamando a un procedimiento almacenado en la base de datos para registrar nuevos docentes. Cada llamado inserta un docente con la información proporcionada
 CALL sp_docente_crear (
     'CC1001',
     'Ana Gómez',
@@ -76,7 +76,7 @@ CALL sp_docente_crear (
     'Cátedra'
 );
 
--- Hace un set para obtener el ID de un docente mediante un select y guardarlo en una variable
+-- El set busca y obtiene el ID de los 2 docentes mediante un select y los guarda en una cajita O variable y Usa esos IDs para asignar a cada uno como responsable de un proyecto diferente al crearlo mediante un procedimiento almacenado.
 SET
     @id_ana := (
         SELECT docente_id
@@ -93,7 +93,7 @@ SET
             numero_documento = 'CC1002'
     );
 
--- Llama al procedimiento de crear un proyecto con los valores proporcionados
+-- Cada bloque de call esta creando un proyecto nuevo en la base de datos, con los datos proporcionados 
 CALL sp_proyecto_crear (
     'Plataforma Académica',
     'Módulos de matrícula',
@@ -114,7 +114,7 @@ CALL sp_proyecto_crear (
     @id_carlos
 );
 
--- Q9: Inserta un docente y un proyecto directamente
+-- Q9: Aca se esta Insertando un docente y un proyecto directamente en las tablas de la base de datos con la informacion proporcionada 
 INSERT INTO
     docente (
         numero_documento,
